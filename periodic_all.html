@@ -6,60 +6,102 @@
 <title>Periodic Properties — JEE Master Table</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: #080d15; font-family: 'Courier New', monospace; color: #c8d4e8; min-height: 100vh; padding: 14px; }
-  h1 { font-size: 13px; letter-spacing: 3px; text-transform: uppercase; color: #4a90c4; margin-bottom: 3px; }
-  .subtitle { font-size: 10px; color: #2a4060; margin-bottom: 10px; letter-spacing: 1px; }
+  :root{
+    --bg-0:#030913;
+    --bg-1:#071424;
+    --bg-2:#0c1f35;
+    --card:#0b1b2e;
+    --card-2:#10253e;
+    --line:#27496d;
+    --text:#d7e9ff;
+    --muted:#86a7cc;
+    --accent:#7cc2ff;
+    --glow:rgba(124,194,255,.2);
+  }
+  html, body { width: 100%; min-height: 100%; }
+  body {
+    background:
+      radial-gradient(circle at 15% 20%, #123c64 0%, transparent 38%),
+      radial-gradient(circle at 85% 5%, #1d3458 0%, transparent 32%),
+      linear-gradient(180deg, var(--bg-1), var(--bg-0) 55%);
+    font-family: Inter, "Segoe UI", "SF Pro Display", Roboto, Arial, sans-serif;
+    color: var(--text);
+    min-height: 100vh;
+    padding: clamp(12px, 2vw, 28px);
+  }
+  .app {
+    width: min(100%, 1840px);
+    min-height: calc(100vh - clamp(24px, 4vw, 56px));
+    margin: 0 auto;
+    border: 1px solid rgba(124,194,255,.2);
+    border-radius: 18px;
+    padding: clamp(14px, 2vw, 26px);
+    background: linear-gradient(160deg, rgba(10,23,40,.82), rgba(4,12,24,.82));
+    box-shadow: 0 28px 90px rgba(0,0,0,.42), inset 0 0 0 1px rgba(140,212,255,.06);
+    backdrop-filter: blur(8px);
+  }
+  h1 { font-size: clamp(18px, 2.15vw, 34px); letter-spacing: 1.6px; text-transform: uppercase; color: #b5ddff; margin-bottom: 5px; }
+  .subtitle { font-size: clamp(12px, 1.05vw, 16px); color: var(--muted); margin-bottom: 16px; letter-spacing: .6px; }
 
   /* TABS */
-  .tab-group { margin-bottom: 5px; }
-  .tab-group-label { font-size: 9px; color: #2a3a50; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
-  .tabs { display: flex; gap: 3px; margin-bottom: 4px; flex-wrap: wrap; }
-  .tab { padding: 4px 11px; font-family: 'Courier New', monospace; font-size: 10px; letter-spacing: .5px; border: 1px solid #1a2a3a; background: #0a1220; color: #2a4a62; border-radius: 3px; cursor: pointer; transition: all .13s; white-space: nowrap; }
-  .tab:hover { border-color: #2a4a68; color: #5a90b8; }
-  .tab.active { background: #0d1f34; border-color: #3a80b4; color: #6ab0d8; }
-  .tab-divider { width: 1px; background: #1a2535; margin: 0 4px; }
+  .tab-group { margin-bottom: 10px; }
+  .tab-group-label { font-size: 11px; color: #6b8fb8; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 7px; }
+  .tabs { display: flex; gap: 6px; margin-bottom: 8px; flex-wrap: wrap; }
+  .tab { padding: 8px 15px; font-size: 13px; letter-spacing: .4px; border: 1px solid #2c537a; background: rgba(7,21,37,.85); color: #98bddf; border-radius: 9px; cursor: pointer; transition: all .16s; white-space: nowrap; }
+  .tab:hover { border-color: #7bbffe; color: #d9edff; transform: translateY(-1px); box-shadow: 0 0 0 4px var(--glow); }
+  .tab.active { background: linear-gradient(180deg, #184067, #103254); border-color: #8fcbff; color: #f4fbff; box-shadow: 0 0 0 4px var(--glow); }
+  .tab-divider { width: 1px; background: #2d4d70; margin: 0 6px; }
 
   /* PANEL */
-  .panel { background: #0b1420; border: 1px solid #1a2d42; border-radius: 5px; padding: 9px 13px; margin-bottom: 10px; min-height: 58px; display: flex; align-items: center; gap: 14px; }
-  .p-sym { font-size: 34px; font-weight: bold; min-width: 50px; text-align: center; line-height: 1; transition: color .15s; }
-  .p-name { font-size: 10px; color: #3a5070; letter-spacing: 1px; text-transform: uppercase; }
-  .p-val { font-size: 20px; font-weight: bold; line-height: 1.3; }
-  .p-note { font-size: 10px; color: #2a4060; margin-top: 3px; max-width: 600px; line-height: 1.5; }
-  .p-tag { display: inline-block; font-size: 10px; padding: 2px 9px; border-radius: 20px; margin-top: 4px; letter-spacing: .4px; }
+  .panel { background: linear-gradient(160deg, rgba(16,37,61,.9), rgba(10,24,42,.86)); border: 1px solid var(--line); border-radius: 14px; padding: 16px 20px; margin-bottom: 14px; min-height: 95px; display: flex; align-items: center; gap: 20px; }
+  .p-sym { font-size: clamp(46px, 3vw, 64px); font-weight: 800; min-width: 76px; text-align: center; line-height: 1; transition: color .15s; }
+  .p-name { font-size: 12px; color: #8ab1d8; letter-spacing: 1.1px; text-transform: uppercase; }
+  .p-val { font-size: clamp(25px, 2vw, 38px); font-weight: 800; line-height: 1.2; margin-top: 2px; }
+  .p-note { font-size: 13px; color: #9cc1e6; margin-top: 6px; max-width: 1100px; line-height: 1.5; }
+  .p-tag { display: inline-block; font-size: 12px; padding: 5px 12px; border-radius: 99px; margin-top: 8px; letter-spacing: .4px; }
 
   /* LEGEND */
-  .legend-wrap { display: flex; align-items: center; gap: 9px; margin-bottom: 10px; }
-  .legend-bar { display: flex; height: 11px; flex: 1; border-radius: 3px; overflow: hidden; }
+  .legend-wrap { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .legend-bar { display: flex; height: 16px; flex: 1; border-radius: 999px; overflow: hidden; border: 1px solid rgba(166,215,255,.35); }
   .legend-seg { flex: 1; }
-  .legend-labels { display: flex; justify-content: space-between; font-size: 9px; color: #1e3050; margin-top: 2px; }
-  .legend-side { font-size: 9px; color: #2a4060; white-space: nowrap; min-width: 0; max-width: 140px; overflow: hidden; text-overflow: ellipsis; }
+  .legend-labels { display: flex; justify-content: space-between; font-size: 11px; color: #89b1da; margin-top: 5px; }
+  .legend-side { font-size: 11px; color: #8eb4da; white-space: nowrap; min-width: 0; max-width: 220px; overflow: hidden; text-overflow: ellipsis; }
 
   /* TABLE */
-  .pt-wrap { overflow-x: auto; }
-  .pt { display: flex; flex-direction: column; gap: 2px; width: fit-content; }
-  .row { display: flex; gap: 2px; }
-  .el { width: 44px; height: 44px; border-radius: 4px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; border: 1px solid transparent; flex-shrink: 0; transition: transform .12s, border-color .12s; position: relative; }
-  .el:hover { transform: scale(1.65); z-index: 99; border-color: rgba(255,255,255,.35); }
+  .pt-wrap { overflow-x: auto; background: rgba(8,21,38,.72); border: 1px solid var(--line); border-radius: 14px; padding: 14px; box-shadow: inset 0 0 0 1px rgba(140,212,255,.06); }
+  .pt { display: flex; flex-direction: column; gap: 4px; width: fit-content; }
+  .row { display: flex; gap: 4px; }
+  .el { width: 58px; height: 58px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; border: 1px solid transparent; flex-shrink: 0; transition: transform .12s, border-color .12s, box-shadow .12s; position: relative; }
+  .el:hover { transform: scale(1.2); z-index: 99; border-color: rgba(255,255,255,.5); box-shadow: 0 0 20px rgba(255,255,255,.25); }
   .el.emp { background: transparent !important; cursor: default; pointer-events: none; }
-  .el.mk { background: #0c1420; border: 1px dashed #182838; cursor: default; pointer-events: none; }
-  .el.gh { background: #090f18; cursor: default; pointer-events: none; }
-  .el.sm { width: 38px; height: 38px; }
-  .sym { font-size: 13px; font-weight: bold; color: #fff; line-height: 1; text-shadow: 0 0 8px rgba(0,0,0,.9); }
-  .val { font-size: 10px; color: rgba(255,255,255,.82); line-height: 1.2; }
-  .el.sm .sym { font-size: 11px; }
-  .el.sm .val { font-size: 9px; }
-  .gap-row { height: 5px; }
+  .el.mk { background: #12253a; border: 1px dashed #4b6e92; cursor: default; pointer-events: none; }
+  .el.gh { background: #0c1a2b; cursor: default; pointer-events: none; }
+  .el.sm { width: 48px; height: 48px; }
+  .sym { font-size: 17px; font-weight: 800; color: #fff; line-height: 1; text-shadow: 0 0 10px rgba(0,0,0,.8); }
+  .val { font-size: 12px; color: rgba(255,255,255,.92); line-height: 1.2; }
+  .el.sm .sym { font-size: 14px; }
+  .el.sm .val { font-size: 10px; }
+  .gap-row { height: 8px; }
 
   /* INSIGHTS */
-  .insights { background: #0b1420; border: 1px solid #182535; border-radius: 5px; padding: 11px 13px; margin-top: 10px; }
-  .ins-title { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: #4a90c4; margin-bottom: 9px; }
-  .ins-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px 16px; }
-  .ins-item { font-size: 11px; color: #2e4a68; line-height: 1.65; }
-  .ins-item strong { color: #5a90b8; display: block; margin-bottom: 2px; }
-  @media (max-width: 700px) { .ins-grid { grid-template-columns: 1fr 1fr; } }
+  .insights { background: linear-gradient(160deg, rgba(13,30,48,.9), rgba(9,20,33,.85)); border: 1px solid var(--line); border-radius: 14px; padding: 17px 18px; margin-top: 14px; }
+  .ins-title { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: #a1d2ff; margin-bottom: 12px; }
+  .ins-grid { display: grid; grid-template-columns: repeat(3, minmax(260px, 1fr)); gap: 12px 18px; }
+  .ins-item { font-size: 13px; color: #9cc1e6; line-height: 1.58; background: rgba(11,25,40,.7); border: 1px solid rgba(130,190,240,.15); border-radius: 10px; padding: 10px; }
+  .ins-item strong { color: #d6eeff; display: block; margin-bottom: 3px; }
+  @media (max-width: 1100px) { .ins-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 720px) {
+    body { padding: 8px; }
+    .app { min-height: calc(100vh - 16px); border-radius: 12px; padding: 10px; }
+    .ins-grid { grid-template-columns: 1fr; }
+    .tab { padding: 7px 10px; font-size: 12px; }
+    .el { width: 50px; height: 50px; }
+    .el.sm { width: 42px; height: 42px; }
+  }
 </style>
 </head>
 <body>
+<div class="app">
 <h1>Periodic Properties — JEE Master Table</h1>
 <p class="subtitle">9 properties · full periodic table · hover element to inspect · color = value gradient</p>
 
@@ -96,6 +138,7 @@
 <div class="insights">
   <div class="ins-title" id="ins-title">—</div>
   <div class="ins-grid" id="ins-grid"></div>
+</div>
 </div>
 
 <script>
