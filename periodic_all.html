@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Periodic Properties — JEE Master Table</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #080d15; font-family: 'Courier New', monospace; color: #c8d4e8; min-height: 100vh; padding: 14px; }
+  h1 { font-size: 13px; letter-spacing: 3px; text-transform: uppercase; color: #4a90c4; margin-bottom: 3px; }
+  .subtitle { font-size: 10px; color: #2a4060; margin-bottom: 10px; letter-spacing: 1px; }
+
+  /* TABS */
+  .tab-group { margin-bottom: 5px; }
+  .tab-group-label { font-size: 9px; color: #2a3a50; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
+  .tabs { display: flex; gap: 3px; margin-bottom: 4px; flex-wrap: wrap; }
+  .tab { padding: 4px 11px; font-family: 'Courier New', monospace; font-size: 10px; letter-spacing: .5px; border: 1px solid #1a2a3a; background: #0a1220; color: #2a4a62; border-radius: 3px; cursor: pointer; transition: all .13s; white-space: nowrap; }
+  .tab:hover { border-color: #2a4a68; color: #5a90b8; }
+  .tab.active { background: #0d1f34; border-color: #3a80b4; color: #6ab0d8; }
+  .tab-divider { width: 1px; background: #1a2535; margin: 0 4px; }
+
+  /* PANEL */
+  .panel { background: #0b1420; border: 1px solid #1a2d42; border-radius: 5px; padding: 9px 13px; margin-bottom: 10px; min-height: 58px; display: flex; align-items: center; gap: 14px; }
+  .p-sym { font-size: 34px; font-weight: bold; min-width: 50px; text-align: center; line-height: 1; transition: color .15s; }
+  .p-name { font-size: 10px; color: #3a5070; letter-spacing: 1px; text-transform: uppercase; }
+  .p-val { font-size: 20px; font-weight: bold; line-height: 1.3; }
+  .p-note { font-size: 10px; color: #2a4060; margin-top: 3px; max-width: 600px; line-height: 1.5; }
+  .p-tag { display: inline-block; font-size: 10px; padding: 2px 9px; border-radius: 20px; margin-top: 4px; letter-spacing: .4px; }
+
+  /* LEGEND */
+  .legend-wrap { display: flex; align-items: center; gap: 9px; margin-bottom: 10px; }
+  .legend-bar { display: flex; height: 11px; flex: 1; border-radius: 3px; overflow: hidden; }
+  .legend-seg { flex: 1; }
+  .legend-labels { display: flex; justify-content: space-between; font-size: 9px; color: #1e3050; margin-top: 2px; }
+  .legend-side { font-size: 9px; color: #2a4060; white-space: nowrap; min-width: 0; max-width: 140px; overflow: hidden; text-overflow: ellipsis; }
+
+  /* TABLE */
+  .pt-wrap { overflow-x: auto; }
+  .pt { display: flex; flex-direction: column; gap: 2px; width: fit-content; }
+  .row { display: flex; gap: 2px; }
+  .el { width: 44px; height: 44px; border-radius: 4px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; border: 1px solid transparent; flex-shrink: 0; transition: transform .12s, border-color .12s; position: relative; }
+  .el:hover { transform: scale(1.65); z-index: 99; border-color: rgba(255,255,255,.35); }
+  .el.emp { background: transparent !important; cursor: default; pointer-events: none; }
+  .el.mk { background: #0c1420; border: 1px dashed #182838; cursor: default; pointer-events: none; }
+  .el.gh { background: #090f18; cursor: default; pointer-events: none; }
+  .el.sm { width: 38px; height: 38px; }
+  .sym { font-size: 13px; font-weight: bold; color: #fff; line-height: 1; text-shadow: 0 0 8px rgba(0,0,0,.9); }
+  .val { font-size: 10px; color: rgba(255,255,255,.82); line-height: 1.2; }
+  .el.sm .sym { font-size: 11px; }
+  .el.sm .val { font-size: 9px; }
+  .gap-row { height: 5px; }
+
+  /* INSIGHTS */
+  .insights { background: #0b1420; border: 1px solid #182535; border-radius: 5px; padding: 11px 13px; margin-top: 10px; }
+  .ins-title { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: #4a90c4; margin-bottom: 9px; }
+  .ins-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px 16px; }
+  .ins-item { font-size: 11px; color: #2e4a68; line-height: 1.65; }
+  .ins-item strong { color: #5a90b8; display: block; margin-bottom: 2px; }
+  @media (max-width: 700px) { .ins-grid { grid-template-columns: 1fr 1fr; } }
+</style>
+</head>
+<body>
+<h1>Periodic Properties — JEE Master Table</h1>
+<p class="subtitle">9 properties · full periodic table · hover element to inspect · color = value gradient</p>
+
+<!-- TABS -->
+<div class="tabs" id="tab-bar"></div>
+
+<!-- PANEL -->
+<div class="panel">
+  <div class="p-sym" id="p-sym" style="color:#152030">—</div>
+  <div>
+    <div class="p-name" id="p-name">hover any element</div>
+    <div class="p-val" id="p-val" style="color:#152030">—</div>
+    <span class="p-tag" id="p-tag" style="display:none"></span>
+    <div class="p-note" id="p-note"></div>
+  </div>
+</div>
+
+<!-- LEGEND -->
+<div class="legend-wrap">
+  <span class="legend-side" id="leg-lo">—</span>
+  <div style="flex:1">
+    <div class="legend-bar" id="legbar"></div>
+    <div class="legend-labels" id="leg-labels">
+      <span id="ll1"></span><span id="ll2"></span><span id="ll3"></span>
+    </div>
+  </div>
+  <span class="legend-side" id="leg-hi">—</span>
+</div>
+
+<!-- TABLE -->
+<div class="pt-wrap"><div class="pt" id="pt"></div></div>
+
+<!-- INSIGHTS -->
+<div class="insights">
+  <div class="ins-title" id="ins-title">—</div>
+  <div class="ins-grid" id="ins-grid"></div>
+</div>
+
+<script>
+// ── NAMES ───────────────────────────────────────────────────────
+const N={H:'Hydrogen',He:'Helium',Li:'Lithium',Be:'Beryllium',B:'Boron',C:'Carbon',N:'Nitrogen',O:'Oxygen',F:'Fluorine',Ne:'Neon',Na:'Sodium',Mg:'Magnesium',Al:'Aluminium',Si:'Silicon',P:'Phosphorus',S:'Sulfur',Cl:'Chlorine',Ar:'Argon',K:'Potassium',Ca:'Calcium',Sc:'Scandium',Ti:'Titanium',V:'Vanadium',Cr:'Chromium',Mn:'Manganese',Fe:'Iron',Co:'Cobalt',Ni:'Nickel',Cu:'Copper',Zn:'Zinc',Ga:'Gallium',Ge:'Germanium',As:'Arsenic',Se:'Selenium',Br:'Bromine',Kr:'Krypton',Rb:'Rubidium',Sr:'Strontium',Y:'Yttrium',Zr:'Zirconium',Nb:'Niobium',Mo:'Molybdenum',Tc:'Technetium',Ru:'Ruthenium',Rh:'Rhodium',Pd:'Palladium',Ag:'Silver',Cd:'Cadmium',In:'Indium',Sn:'Tin',Sb:'Antimony',Te:'Tellurium',I:'Iodine',Xe:'Xenon',Cs:'Caesium',Ba:'Barium',La:'Lanthanum',Hf:'Hafnium',Ta:'Tantalum',W:'Tungsten',Re:'Rhenium',Os:'Osmium',Ir:'Iridium',Pt:'Platinum',Au:'Gold',Hg:'Mercury',Tl:'Thallium',Pb:'Lead',Bi:'Bismuth',Po:'Polonium',At:'Astatine',Rn:'Radon',Fr:'Francium',Ra:'Radium',Ce:'Cerium',Pr:'Praseodymium',Nd:'Neodymium',Pm:'Promethium',Sm:'Samarium',Eu:'Europium',Gd:'Gadolinium',Tb:'Terbium',Dy:'Dysprosium',Ho:'Holmium',Er:'Erbium',Tm:'Thulium',Yb:'Ytterbium',Lu:'Lutetium',Ac:'Actinium',Th:'Thorium',Pa:'Protactinium',U:'Uranium',Np:'Neptunium',Pu:'Plutonium',Am:'Americium',Cm:'Curium',Bk:'Berkelium',Cf:'Californium',Es:'Einsteinium',Fm:'Fermium',Md:'Mendelevium',No:'Nobelium',Lr:'Lawrencium'};
+
+// ── PROPERTY DEFINITIONS ─────────────────────────────────────────
+const PROPS = {
+
+  srp:{label:'⚡ SRP',name:'Standard Reduction Potential',unit:'E° / V',
+    dispFn:v=>(v>=0?'+':'')+v.toFixed(2)+' V',
+    min:-3.5,max:3.0,inv:false,
+    loLbl:'-3.5 V (Li — strongest reducer)',hiLbl:'+3.0 V (F — strongest oxidizer)',
+    ll:['Strong reducer (metallic)','0 V = SHE','Strong oxidizer'],
+    tagFn:v=>v<=-2?'Very strong reducing agent':v<=-1?'Strong reducing agent':v<0?'Mild reducing agent':v<0.5?'Weakly oxidizing':v<1.2?'Moderate oxidizing agent':'Strong oxidizing agent',
+    noteFn:s=>({F:'Absolute ceiling — F₂ can oxidize everything including Xe, O₂, Cl₂. Never acts as reducing agent.',Li:'Most negative SRP despite period 2 placement — extraordinary hydration enthalpy (−519 kJ/mol) dominates.',Cu:'Positive SRP (+0.34 V) — cannot displace H₂ from dilute acid. Classic JEE trap.',Mn:'Anomalous dip in 3d trend (−1.18 V) — d⁵ half-filled configuration extra stability lowers tendency to be oxidized.',Au:'Only metal dissolving in aqua regia (3HCl:1HNO₃) — SRP +1.50 V, highest among common metals.',Cr:'Protected by Cr₂O₃ passivation layer despite −0.74 V SRP — explains corrosion resistance.',Hg:'Liquid metal SRP +0.85 V — forms Hg₂²⁺ (mercurous) and Hg²⁺ (mercuric) ions.'})[s]||'',
+    data:{H:0.00,He:null,Li:-3.04,Be:-1.85,B:null,C:null,N:null,O:1.23,F:2.87,Ne:null,Na:-2.71,Mg:-2.37,Al:-1.66,Si:null,P:null,S:0.14,Cl:1.36,Ar:null,K:-2.93,Ca:-2.87,Sc:-2.08,Ti:-1.63,V:-1.13,Cr:-0.74,Mn:-1.18,Fe:-0.44,Co:-0.28,Ni:-0.25,Cu:0.34,Zn:-0.76,Ga:-0.53,Ge:-0.11,As:0.30,Se:-0.40,Br:1.07,Kr:null,Rb:-2.98,Sr:-2.89,Y:-2.37,Zr:-1.53,Nb:-1.10,Mo:-0.20,Tc:0.40,Ru:0.45,Rh:0.60,Pd:0.99,Ag:0.80,Cd:-0.40,In:-0.34,Sn:-0.14,Sb:0.21,Te:-0.79,I:0.54,Xe:null,Cs:-3.03,Ba:-2.91,La:-2.52,Hf:-1.70,Ta:-0.60,W:-0.12,Re:0.30,Os:0.65,Ir:1.16,Pt:1.20,Au:1.50,Hg:0.85,Tl:-0.34,Pb:-0.13,Bi:0.31,Po:0.65,At:0.30,Rn:null,Fr:-2.90,Ra:-2.92,Ce:-2.34,Pr:-2.35,Nd:-2.32,Pm:-2.29,Sm:-2.30,Eu:-1.99,Gd:-2.28,Tb:-2.28,Dy:-2.29,Ho:-2.33,Er:-2.32,Tm:-2.32,Yb:-2.22,Lu:-2.30,Ac:-2.60,Th:-1.83,Pa:-1.49,U:-1.66,Np:-1.86,Pu:-2.03,Am:-2.07,Cm:-2.06,Bk:-2.01,Cf:-2.06,Es:-1.98,Fm:-1.96,Md:-1.65,No:-2.50,Lr:null},
+    insights:[
+      {t:'Activity series',b:'SRP < 0 → displaces H₂ from dilute acid. Zn(−0.76), Fe(−0.44), Ni(−0.25) — all displace H₂. Cu(+0.34) — does not. This is the single most JEE-tested SRP rule.'},
+      {t:'Halogens trend ↓',b:'F(+2.87) > Cl(+1.36) > Br(+1.07) > I(+0.54). Oxidizing power drops down. F₂ displaces Cl⁻, Br⁻, I⁻. Cl₂ displaces Br⁻, I⁻. Br₂ displaces only I⁻. Disproportionation test.'},
+      {t:'Alkali metals anomaly',b:'Expected order: Li < Na < K < Rb < Cs (increasing metallic character). Actual SRP order: Li(−3.04) > Cs(−3.03) > Rb(−2.98) > K(−2.93) > Na(−2.71). Li anomaly — hydration enthalpy.'},
+      {t:'Cell EMF formula',b:'E°cell = E°cathode − E°anode. Positive E°cell → spontaneous. ΔG° = −nFE°. ln K = nFE°/RT. At 298K: E° = (0.0592/n) log K. These four interconnections are constant JEE material.'},
+      {t:'Mn anomaly in 3d',b:'Mn(−1.18 V) is more negative than expected. Half-filled d⁵ configuration is extra-stable → Mn²⁺ + 2e⁻ → Mn is harder to drive forward → more negative SRP.'},
+      {t:'Noble metals (5d row)',b:'Au(+1.50) > Pt(+1.20) > Ir(+1.16) > Rh(+0.60) > Pd(+0.99) > Ag(+0.80). Aqua regia (conc. HNO₃ + 3HCl) dissolves Au and Pt via Cl⁻ complex formation + oxidation.'}
+    ]
+  },
+
+  en:{label:'🔗 EN',name:'Electronegativity',unit:'Pauling scale',
+    dispFn:v=>v.toFixed(2),min:0.79,max:3.98,inv:false,
+    loLbl:'0.79 (Cs) — most electropositive',hiLbl:'3.98 (F) — most electronegative',
+    ll:['Metallic / low EN','~1.9 metalloid boundary','Nonmetal / high EN'],
+    tagFn:v=>v<1.2?'Very electropositive (metallic)':v<1.8?'Moderate':v<2.6?'Electronegative':'Highly electronegative',
+    noteFn:s=>({F:'Highest EN — defines the top of Pauling scale. No element can oxidize F⁻.',N:'EN(N) > EN(O) by classical prediction — corrected: O(3.44) > N(3.04). But N > S, P as expected.',Be:'Diagonal relationship with Al — both EN ≈ 1.5–1.6. Explains BeO/Al₂O₃ amphoteric behavior.',Cu:'EN(Cu)=1.90 > EN(Ni)=1.91 — essentially tied; positive SRP explained partly by EN.',Cr:'Slight drop in d-block trend due to half-filled d⁵ configuration effect on electron binding.',B:'Diagonal relationship with Si — both EN ≈ 2.0. Explains BCl₃ Lewis acid strength and Si semiconductor behavior.'})[s]||'',
+    data:{H:2.20,He:null,Li:0.98,Be:1.57,B:2.04,C:2.55,N:3.04,O:3.44,F:3.98,Ne:null,Na:0.93,Mg:1.31,Al:1.61,Si:1.90,P:2.19,S:2.58,Cl:3.16,Ar:null,K:0.82,Ca:1.00,Sc:1.36,Ti:1.54,V:1.63,Cr:1.66,Mn:1.55,Fe:1.83,Co:1.88,Ni:1.91,Cu:1.90,Zn:1.65,Ga:1.81,Ge:2.01,As:2.18,Se:2.55,Br:2.96,Kr:3.00,Rb:0.82,Sr:0.95,Y:1.22,Zr:1.33,Nb:1.60,Mo:2.16,Tc:1.90,Ru:2.20,Rh:2.28,Pd:2.20,Ag:1.93,Cd:1.69,In:1.78,Sn:1.96,Sb:2.05,Te:2.10,I:2.66,Xe:2.60,Cs:0.79,Ba:0.89,La:1.10,Hf:1.30,Ta:1.50,W:2.36,Re:1.90,Os:2.20,Ir:2.20,Pt:2.28,Au:2.54,Hg:2.00,Tl:1.62,Pb:2.33,Bi:2.02,Po:2.00,At:2.20,Rn:null,Fr:0.70,Ra:0.90,Ce:1.12,Pr:1.13,Nd:1.14,Pm:null,Sm:1.17,Eu:null,Gd:1.20,Tb:null,Dy:1.22,Ho:1.23,Er:1.24,Tm:1.25,Yb:null,Lu:1.27,Ac:1.10,Th:1.30,Pa:1.50,U:1.38,Np:1.36,Pu:1.28,Am:1.13,Cm:1.28,Bk:1.30,Cf:1.30,Es:1.30,Fm:1.30,Md:1.30,No:1.30,Lr:null},
+    insights:[
+      {t:'Period trend →',b:'EN increases L→R. Increasing Zeff with nearly constant shielding → stronger nuclear pull on bonding electrons. Largest jump at halogens.'},
+      {t:'Group trend ↓',b:'EN decreases down group. Larger radius + more shielding → weaker pull. Cs (0.79) minimum for stable elements. Fr (0.70) estimated.'},
+      {t:'Anomalies (JEE MCQ)',b:'N(3.04) — higher than expected vs O. Be–Al diagonal pair. B–Si diagonal pair. O > N contradicts simple trend — remember corrected order: F > O > N > Cl.'},
+      {t:'Bond type rule',b:'ΔEN > 1.7 → ionic (>50% character). ΔEN 0.4–1.7 → polar covalent. < 0.4 → non-polar. NaCl ΔEN = 2.23 (ionic). HCl ΔEN = 0.96 (polar covalent).'},
+      {t:'Metalloid boundary',b:'EN ≈ 1.8–2.2 defines the semiconductor/metalloid zone. Si (1.90), Ge (2.01), As (2.18), Te (2.10) all sit here — each has semiconductor applications.'},
+      {t:'JEE trap',b:'F has highest EN but NOT highest electron affinity (Cl > F — repulsion in 2p). O has higher EN than S but lower EA. Pauling derived EN from bond dissociation energies thermochemically.'}
+    ]
+  },
+
+  ar:{label:'⊙ Radius',name:'Atomic Radius',unit:'Covalent radius / pm',
+    dispFn:v=>v+' pm',min:28,max:260,inv:true,
+    loLbl:'28 pm (He) — smallest',hiLbl:'260 pm (Fr) — largest',
+    ll:['Small (nonmetal)','~130 pm mid','Large (metal)'],
+    tagFn:v=>v<80?'Very small':v<130?'Small (period 2–3 nonmetal)':v<175?'Moderate (transition metal)':v<215?'Large (s-block metal)':'Very large (heavy alkali)',
+    noteFn:s=>({Cu:'d¹⁰ configuration — radius expands vs Ni. Filled d-shell shields less effectively.',Hf:'Radius ≈ Zr (175 pm) — lanthanide contraction. 4f electrons shield poorly; 5d electrons contracted. Key JEE fact.',Zr:'Radius ≈ Hf due to lanthanide contraction — these two are hardest to separate in industry.',Au:'Compact 5d row (lanthanide contraction) — partially explains gold\'s color (relativistic 5d→6s transition).',Fe:'Fe (132 pm) < Mn (139 pm) — d-orbital contraction overrides expected increase.',Cr:'Slight radius expansion at d⁵ — half-fill reduces effective attraction somewhat.'})[s]||'',
+    data:{H:31,He:28,Li:128,Be:96,B:84,C:77,N:71,O:66,F:57,Ne:58,Na:166,Mg:141,Al:121,Si:111,P:107,S:105,Cl:102,Ar:106,K:203,Ca:176,Sc:170,Ti:160,V:153,Cr:139,Mn:139,Fe:132,Co:126,Ni:124,Cu:132,Zn:122,Ga:122,Ge:122,As:119,Se:120,Br:120,Kr:116,Rb:220,Sr:195,Y:190,Zr:175,Nb:164,Mo:154,Tc:147,Ru:146,Rh:142,Pd:139,Ag:145,Cd:144,In:142,Sn:139,Sb:139,Te:138,I:139,Xe:140,Cs:244,Ba:215,La:207,Hf:175,Ta:170,W:162,Re:151,Os:144,Ir:141,Pt:136,Au:136,Hg:132,Tl:145,Pb:146,Bi:148,Po:140,At:150,Rn:150,Fr:260,Ra:221,Ce:204,Pr:203,Nd:201,Pm:199,Sm:198,Eu:198,Gd:196,Tb:194,Dy:192,Ho:192,Er:189,Tm:190,Yb:187,Lu:187,Ac:215,Th:206,Pa:200,U:196,Np:190,Pu:187,Am:180,Cm:169,Bk:168,Cf:166,Es:165,Fm:167,Md:173,No:176,Lr:161},
+    insights:[
+      {t:'Period trend →',b:'Radius decreases L→R. Increasing Zeff contracts electron cloud. Same-shell shielding is weak (σ ≈ 0.35 per peer electron). Largest drop between groups 1→2.'},
+      {t:'Group trend ↓',b:'Radius increases down group — new principal quantum shells. Each new shell is further from nucleus. Shielding grows but nuclear charge increase is partially offset.'},
+      {t:'Lanthanide contraction',b:'4f electrons shield poorly (σ ≈ 0.85 per 4f electron). Across lanthanides, Zeff builds → 5d/6s compressed. Result: Hf ≈ Zr, Au smaller than expected, Pb behavior anomalous.'},
+      {t:'Isoelectronic series',b:'Same electrons, more protons = smaller. O²⁻ > F⁻ > Ne > Na⁺ > Mg²⁺ > Al³⁺ (all 10e⁻). S²⁻ > Cl⁻ > Ar > K⁺ > Ca²⁺ (all 18e⁻). Favourite JEE series ordering question.'},
+      {t:'Cation < Anion rule',b:'Removing e⁻ → fewer repulsions → contracts. Adding e⁻ → more repulsion → expands. Cu⁺ > Cu²⁺. Fe²⁺ > Fe³⁺. Always compare using electron count and Zeff together.'},
+      {t:'d-block compression',b:'Sc→Cu: radius generally shrinks as Zeff increases. But Cu (132 pm) > Ni (124 pm) — d¹⁰ anomaly. Zn (122 pm) then resumes compression. Memorise this dip for MCQs.'}
+    ]
+  },
+
+  ie:{label:'↑ IE₁',name:'Ionisation Enthalpy (1st)',unit:'IE₁ / kJ mol⁻¹',
+    dispFn:v=>v+' kJ/mol',min:376,max:2372,inv:false,
+    loLbl:'376 kJ/mol (Cs)',hiLbl:'2372 kJ/mol (He)',
+    ll:['Low IE → active metal','~900 kJ mid','High → noble/halogen'],
+    tagFn:v=>v<550?'Very low — active metal':v<800?'Low-moderate metal':v<1100?'Moderate':v<1500?'High — nonmetal':'Very high — noble gas / halogen',
+    noteFn:s=>({Be:'IE₁(Be)=900 > IE₁(B)=801 — 2s > 2p penetration. Removing 2p electron is easier. Classic JEE pair.',N:'IE₁(N)=1402 > IE₁(O)=1314 — half-filled 2p³ extra stability. Pairing in O destabilises one 2p electron.',Mg:'IE₁(Mg)=738 > IE₁(Al)=578 — same logic as Be/B: 3s > 3p.',P:'IE₁(P)=1012 > IE₁(S)=1000 — half-filled 3p³ stability. S has electron pairing in 3p.',Cu:'3d¹⁰ shields 4s poorly → higher IE than expected from period trend.',Zn:'IE₁(Zn)=906 — peak in d-block: full 3d¹⁰4s² both stable.',Hg:'Highest IE in 5d row — filled d¹⁰s², plus relativistic contraction increases binding of 6s electrons.'})[s]||'',
+    data:{H:1312,He:2372,Li:520,Be:900,B:801,C:1086,N:1402,O:1314,F:1681,Ne:2081,Na:496,Mg:738,Al:578,Si:786,P:1012,S:1000,Cl:1251,Ar:1521,K:419,Ca:590,Sc:633,Ti:659,V:651,Cr:653,Mn:717,Fe:762,Co:760,Ni:737,Cu:745,Zn:906,Ga:579,Ge:762,As:947,Se:941,Br:1140,Kr:1351,Rb:403,Sr:550,Y:600,Zr:640,Nb:652,Mo:684,Tc:702,Ru:711,Rh:720,Pd:805,Ag:731,Cd:868,In:558,Sn:709,Sb:834,Te:869,I:1008,Xe:1170,Cs:376,Ba:503,La:538,Hf:659,Ta:761,W:770,Re:760,Os:840,Ir:880,Pt:870,Au:890,Hg:1007,Tl:589,Pb:716,Bi:703,Po:812,At:920,Rn:1037,Fr:400,Ra:509,Ce:534,Pr:527,Nd:533,Pm:540,Sm:545,Eu:547,Gd:593,Tb:566,Dy:573,Ho:581,Er:589,Tm:597,Yb:603,Lu:524,Ac:499,Th:587,Pa:568,U:598,Np:605,Pu:585,Am:578,Cm:581,Bk:601,Cf:608,Es:619,Fm:627,Md:635,No:642,Lr:null},
+    insights:[
+      {t:'Period trend →',b:'IE₁ generally increases L→R (higher Zeff, same shielding). But dips at group 2→13 (s→p) and group 15→16 (half-fill). These two dips are the most-tested JEE anomalies.'},
+      {t:'4 JEE anomaly pairs',b:'Be>B, N>O (period 2); Mg>Al, P>S (period 3). All explained by: (a) ns electrons > np electrons stability, or (b) half-filled npᶟ symmetry. Write these in exam with reason.'},
+      {t:'Group trend ↓',b:'IE₁ decreases down group — larger radius, more shielding. But Li (520) > Na (496) > K (419) — smooth here. Exception: Tl vs In (6s inert pair effect increases Tl slightly).'},
+      {t:'Successive IEs (key)',b:'Huge jump after removing all valence electrons identifies group. Na: IE₁=496, IE₂=4562 (×9 jump) → group 1. Mg: IE₁=738, IE₂=1451, IE₃=7733 → group 2. Determine group from IE data.'},
+      {t:'d-block',b:'3d: irregular. Cr and Cu show anomalous 3d⁵4s¹ and 3d¹⁰4s¹ → their IE₁ is slightly higher than neighbours. Zn (906) is highest in row. After Zn, drops to Ga (579) due to 4p.'},
+      {t:'Noble gas rule',b:'He (2372) > Ne (2081) > Ar (1521) > Kr (1351) > Xe (1170). Always highest IE in each period. Used to explain chemical inertness. He > Ne anomaly: 1s² vs 2s²2p⁶.'}
+    ]
+  },
+
+  ea:{label:'↓ EA',name:'Electron Affinity',unit:'kJ mol⁻¹ (energy released)',
+    dispFn:v=>v===0?'≈ 0':v+' kJ/mol',min:0,max:349,inv:false,
+    loLbl:'≈ 0 (noble gas / group 2)',hiLbl:'349 kJ/mol (Cl — maximum)',
+    ll:['≈0 (repels e⁻)','~150 kJ mid','349 (Cl peak)'],
+    tagFn:v=>v===0?'Negligible / endothermic':v<80?'Low affinity':v<200?'Moderate affinity':v<300?'High affinity':'Very high — strong oxidizer',
+    noteFn:s=>({Cl:'EA(Cl)=349 > EA(F)=328 — highest EA of all elements. F\'s compact 2p orbital → high e⁻ repulsion on addition. Classic JEE reversal.',F:'EA(F)=328 < EA(Cl)=349 — despite higher EN. Small 2p orbital: incoming e⁻ faces dense electron cloud. Repulsion > attraction gain.',N:'EA ≈ 0 — half-filled 2p³ resists extra electron. Adding e⁻ forces pairing → no net energy gain.',Be:'EA ≈ 0 — filled 2s² subshell. Extra e⁻ enters 2p, energetically unfavorable.',O:'EA(O→O⁻)=141 kJ/mol. But EA(O⁻→O²⁻) = −744 kJ/mol (endothermic!) — O²⁻ only stable in ionic lattice.',Au:'EA(Au)=223 — unusually high for a metal. Relativistic 6s orbital contraction. Contributes to gold\'s nobility.',Pt:'EA(Pt)=205 — high for metal. 5d relativistic effects. Used in catalysis partly due to high e⁻ affinity.'})[s]||'',
+    data:{H:73,He:0,Li:60,Be:0,B:27,C:122,N:0,O:141,F:328,Ne:0,Na:53,Mg:0,Al:43,Si:134,P:72,S:200,Cl:349,Ar:0,K:48,Ca:2,Sc:18,Ti:8,V:51,Cr:65,Mn:0,Fe:16,Co:64,Ni:112,Cu:119,Zn:0,Ga:29,Ge:119,As:78,Se:195,Br:325,Kr:0,Rb:47,Sr:5,Y:30,Zr:41,Nb:86,Mo:72,Tc:96,Ru:101,Rh:110,Pd:54,Ag:126,Cd:0,In:29,Sn:107,Sb:101,Te:190,I:295,Xe:0,Cs:46,Ba:14,La:48,Hf:0,Ta:31,W:79,Re:6,Os:106,Ir:151,Pt:205,Au:223,Hg:0,Tl:19,Pb:35,Bi:91,Po:136,At:270,Rn:0,Fr:44,Ra:10,Ce:50,Pr:50,Nd:50,Pm:50,Sm:50,Eu:50,Gd:50,Tb:50,Dy:50,Ho:50,Er:50,Tm:50,Yb:50,Lu:50,Ac:0,Th:0,Pa:0,U:0,Np:0,Pu:0,Am:0,Cm:0,Bk:0,Cf:0,Es:0,Fm:0,Md:0,No:0,Lr:0},
+    insights:[
+      {t:'Cl > F reversal',b:'EA(Cl)=349 > EA(F)=328 — the most-tested EA fact in JEE. Small 2p orbital of F causes electron-electron repulsion that partially offsets the nuclear attraction gain. Br(325) and I(295) fall smoothly below Cl.'},
+      {t:'EA ≈ 0 elements',b:'Noble gases (filled shells), alkaline earth metals (filled s²), N (half-filled p³), Mn (half-filled d⁵), and Zn (filled d¹⁰) all have negligible or endothermic EA. These are systematic, not arbitrary.'},
+      {t:'O vs S (mirrors F vs Cl)',b:'EA(S)=200 > EA(O)=141 — same 2p compactness argument. Also explains H₂S > H₂O as a weaker acid in gas phase context. The 2p orbital compression effect appears in groups 16 and 17 both.'},
+      {t:'Second electron affinity',b:'Always endothermic (O²⁻, S²⁻ require energy input). O²⁻ is only stable in ionic lattice (Madelung energy offsets). Gas-phase O²⁻ is unstable. This explains why metal oxides are ionic solids.'},
+      {t:'Noble metals (Au, Pt)',b:'EA(Au)=223, EA(Pt)=205 — anomalously high for metals. Relativistic 6s orbital contraction increases e⁻ affinity. Explains catalytic reactivity of Pt and the partially covalent character of Au compounds.'},
+      {t:'Period trend',b:'General: EA increases L→R (more Zeff = more attractive to extra e⁻). Exceptions: groups 2, 7 (N, Mn), 12 (Zn, Cd) break the trend due to filled/half-filled subshell stability. Plot mentally.'}
+    ]
+  },
+
+  mc:{label:'◈ Metallic',name:'Metallic Character',unit:'Qualitative scale 0–10',
+    dispFn:v=>v+'/10',min:0,max:10,inv:true,
+    loLbl:'0 — non-metal / noble gas',hiLbl:'10 — most metallic',
+    ll:['Nonmetal (red)','Metalloid band','Active metal (blue)'],
+    tagFn:v=>v===0?'Non-metal / Noble gas':v<=2?'Non-metal':v<=4?'Metalloid / Borderline':v<=6?'Post-transition / weak metal':v<=8?'Metal':'Highly metallic (active)',
+    noteFn:s=>({Al:'Amphoteric — reacts with both HCl (acid) and NaOH (base). Marks metallic boundary in period 3.',Be:'Amphoteric oxide — diagonal Be/Al relationship. Small charge density mimics Al behavior.',Si:'Classic semiconductor metalloid. EN=1.90, band gap=1.1 eV. p-type/n-type doping basis of electronics.',Ge:'Semiconductor like Si. First transistor made from Ge (1947). Slightly smaller band gap than Si.',As:'Metalloid — grey form is semi-metallic. Toxic. Used in III-V semiconductors (GaAs).',Tl:'Heavier group 13 — 6s inert pair effect makes Tl⁺ (not Tl³⁺) more stable. Weaker metallic character.',Bi:'Least metallic of all true metals. Diamagnetic. Lowest thermal conductivity of metals. Pink tinge.'})[s]||'',
+    data:{H:2,He:0,Li:10,Be:7,B:3,C:2,N:1,O:1,F:0,Ne:0,Na:10,Mg:8,Al:6,Si:3,P:2,S:2,Cl:1,Ar:0,K:10,Ca:9,Sc:8,Ti:8,V:8,Cr:7,Mn:7,Fe:8,Co:8,Ni:8,Cu:8,Zn:7,Ga:6,Ge:3,As:3,Se:2,Br:1,Kr:0,Rb:10,Sr:9,Y:8,Zr:8,Nb:8,Mo:7,Tc:7,Ru:7,Rh:7,Pd:7,Ag:8,Cd:6,In:6,Sn:5,Sb:4,Te:3,I:1,Xe:0,Cs:10,Ba:9,La:8,Hf:8,Ta:8,W:7,Re:7,Os:7,Ir:7,Pt:7,Au:7,Hg:5,Tl:6,Pb:5,Bi:4,Po:4,At:2,Rn:0,Fr:10,Ra:9,Ce:8,Pr:8,Nd:8,Pm:8,Sm:8,Eu:8,Gd:8,Tb:8,Dy:8,Ho:8,Er:8,Tm:8,Yb:7,Lu:8,Ac:8,Th:8,Pa:8,U:7,Np:7,Pu:7,Am:7,Cm:7,Bk:7,Cf:7,Es:7,Fm:7,Md:7,No:7,Lr:null},
+    insights:[
+      {t:'Period trend →',b:'Metallic character decreases L→R. More Zeff → atoms retain electrons tighter → reduced tendency to donate electrons → weaker metallic bonding → harder, higher-melting, less conductive.'},
+      {t:'Group trend ↓',b:'Increases down group. Larger radius + more shielding → electrons more loosely held → easier to donate → stronger metallic lattice. Cs > K > Na > Li in reactivity (not SRP).'},
+      {t:'Metalloid diagonal',b:'B–Si–Ge–As–Se–Te–At form a diagonal band. Intermediate EN, partial metallic lustre, semiconductor properties. Si and Ge are the commercially crucial ones (ICs, solar cells).'},
+      {t:'Amphoteric border',b:'Be, Al, Zn, Ga, Sn, Pb form amphoteric oxides. Al₂O₃ + NaOH → NaAlO₂ + H₂O; Al₂O₃ + HCl → AlCl₃ + H₂O. These elements sit at the metallic/nonmetallic boundary in their period.'},
+      {t:'Inert pair effect',b:'In groups 13–15 (period 6): Tl, Pb, Bi show lower oxidation states (+1, +2, +3) because 6s electrons become inert due to relativistic contraction. Reduces effective metallic character.'},
+      {t:'H placement debate',b:'H placed in group 1 (forms H⁺) but is non-metal (EN=2.2). Sometimes placed in group 17 (forms H⁻ like halides). Best answer: H is unique — not fully metallic or non-metallic. Use EN and IE evidence.'}
+    ]
+  },
+
+  mp:{label:'🌡 Melt Pt',name:'Melting Point',unit:'°C',
+    dispFn:v=>v+' °C',min:-259,max:3422,inv:false,
+    loLbl:'−259 °C (H₂ — lowest)',hiLbl:'3422 °C (W — highest)',
+    ll:['Very low mp (gas/molecular)','~1000 °C mid','Refractory (W, Ta, Os)'],
+    tagFn:v=>v<0?'Gas or liquid at room temp':v<500?'Low melting solid':v<1000?'Moderate mp':v<2000?'High mp metal':'Refractory metal / extreme mp',
+    noteFn:s=>({W:'Highest melting point of all elements (3422 °C) — strong metallic bond from 5d⁴6s² half-filled arrangement. Used in lightbulb filaments.',Hg:'Only metal liquid at room temperature (mp −38.8 °C) — weak metallic bonding due to filled d¹⁰ + relativistic 6s contraction.',Cs:'Second lowest melting metal after Hg (28.5 °C) — very large atoms, weak metallic bonds.',Ga:'Melts in your hand (29.8 °C) — similar to Cs but higher density. Due to unusual crystal structure.',Os:'Second highest mp (3033 °C) — densest element. Strong d-orbital overlap in 5d row.',Na:'Soft metal mp 97.8 °C — common in sodium vapor lamps, liquid Na coolant in fast reactors.',Fe:'mp 1538 °C — basis of steel industry. Strong metallic bonding from 3d⁶ configuration.'})[s]||'',
+    data:{H:-259,He:-272,Li:181,Be:1287,B:2076,C:3500,N:-210,O:-219,F:-220,Ne:-249,Na:98,Mg:650,Al:660,Si:1414,P:44,S:115,Cl:-101,Ar:-189,K:64,Ca:842,Sc:1541,Ti:1668,V:1910,Cr:1907,Mn:1246,Fe:1538,Co:1495,Ni:1455,Cu:1085,Zn:420,Ga:30,Ge:938,As:817,Se:221,Br:-7,Kr:-157,Rb:39,Sr:777,Y:1526,Zr:1855,Nb:2477,Mo:2623,Tc:2157,Ru:2334,Rh:1964,Pd:1555,Ag:962,Cd:321,In:157,Sn:232,Sb:631,Te:450,I:114,Xe:-112,Cs:29,Ba:727,La:920,Hf:2233,Ta:3017,W:3422,Re:3186,Os:3033,Ir:2446,Pt:1768,Au:1064,Hg:-39,Tl:304,Pb:328,Bi:271,Po:254,At:302,Rn:-71,Fr:27,Ra:700,Ce:799,Pr:931,Nd:1016,Pm:1042,Sm:1074,Eu:822,Gd:1313,Tb:1356,Dy:1412,Ho:1474,Er:1529,Tm:1545,Yb:819,Lu:1663,Ac:1050,Th:1750,Pa:1572,U:1135,Np:644,Pu:640,Am:1176,Cm:1345,Bk:986,Cf:900,Es:860,Fm:null,Md:null,No:null,Lr:null},
+    insights:[
+      {t:'Metallic bonding strength',b:'Stronger metallic bond → higher mp. W (3422 °C) tops all — five bonding 5d/6s electrons, compact atom. Refractory metals (W, Ta, Re, Os, Mo) all have mp > 2000 °C.'},
+      {t:'Hg and Ga anomalies',b:'Hg (−38.8 °C) and Ga (29.8 °C) are the "liquid metals" at near-room conditions. Hg: relativistic 6s contraction + d¹⁰ inertness. Ga: unusual crystal structure, only 1 bonding e⁻ per atom.'},
+      {t:'Period 3 trend',b:'Na(98) < Mg(650) < Al(660) → jump to Si(1414) then drops: P(44) < S(115) < Cl(−101) < Ar(−189). Metallic bonding peaks at Al; non-metals have weak molecular forces → sudden drop.'},
+      {t:'d-block trend',b:'mp generally rises from Sc→W (increasing d-orbital bonding electrons), then falls toward Cu and Zn. W/Os/Re are the top. Mn (1246 °C) is notably lower — half-filled d⁵ disrupts metallic bonding.'},
+      {t:'p-block period 4',b:'Ga (30 °C) → Ge (938) → As (817) → Se (221) → Br (−7) → Kr (−157). Ga anomaly (low mp) is a JEE favourite. Ge and As are high due to covalent network structure.'},
+      {t:'JEE exam use',b:'mp used to infer bonding type: network covalent (C, Si, Ge) = high mp. Ionic solids = moderate-high. Metallic = varies. Molecular (F₂, Cl₂, noble gases, S₈, P₄) = low. Identify bonding from mp.'}
+    ]
+  },
+
+  bp:{label:'♨ Boil Pt',name:'Boiling Point',unit:'°C',
+    dispFn:v=>v+' °C',min:-269,max:5555,inv:false,
+    loLbl:'−269 °C (He — absolute lowest)',hiLbl:'5555 °C (Re — highest)',
+    ll:['Very low bp (noble/molecular)','~2000 °C mid','Extreme bp (5d metals)'],
+    tagFn:v=>v<0?'Gas at room temperature':v<1000?'Moderate bp':v<3000?'High bp refractory':'Extreme bp (5d metals)',
+    noteFn:s=>({He:'Lowest boiling point of any element (−268.9 °C, 4.2 K) — only van der Waals forces between He atoms. Basis of liquid helium cryogenics.',Re:'Highest boiling point of all elements (5555 °C) — stronger than W in this regard. Used in high-temp alloys.',W:'Highest melting point but Re has higher bp. Both used in extreme-temperature applications.',Hg:'bp = 356.7 °C — volatile liquid metal. Toxic vapor. Historically used in thermometers and fluorescent lamps.',Na:'bp = 883 °C — used as liquid coolant in fast breeder reactors. Na conducts heat excellently.',N:'bp = −196 °C (77 K) — liquid nitrogen, major industrial cooling agent. 78% of atmosphere.',O:'bp = −183 °C (90 K) — liquid oxygen used in rocket propellants (LOX). Basis of cryogenic chemistry.'})[s]||'',
+    data:{H:-253,He:-269,Li:1342,Be:2470,B:3927,C:4827,N:-196,O:-183,F:-188,Ne:-246,Na:883,Mg:1090,Al:2519,Si:3265,P:280,S:445,Cl:-35,Ar:-186,K:759,Ca:1484,Sc:2836,Ti:3287,V:3407,Cr:2672,Mn:2061,Fe:2861,Co:2927,Ni:2913,Cu:2562,Zn:907,Ga:2204,Ge:2833,As:614,Se:685,Br:59,Kr:-153,Rb:688,Sr:1382,Y:3336,Zr:4409,Nb:4744,Mo:4639,Tc:4265,Ru:4150,Rh:3695,Pd:2963,Ag:2162,Cd:767,In:2072,Sn:2602,Sb:1587,Te:988,I:184,Xe:-108,Cs:671,Ba:1897,La:3464,Hf:4603,Ta:5458,W:5555,Re:5596,Os:5012,Ir:4428,Pt:3825,Au:2856,Hg:357,Tl:1473,Pb:1749,Bi:1564,Po:962,At:337,Rn:-61,Fr:677,Ra:1737,Ce:3443,Pr:3520,Nd:3074,Pm:3000,Sm:1794,Eu:1529,Gd:3273,Tb:3230,Dy:2567,Ho:2700,Er:2868,Tm:1950,Yb:1196,Lu:3402,Ac:3198,Th:4788,Pa:4027,U:4131,Np:4000,Pu:3228,Am:2011,Cm:3110,Bk:2627,Cf:null,Es:null,Fm:null,Md:null,No:null,Lr:null},
+    insights:[
+      {t:'He anomaly',b:'He (−268.9 °C / 4.2 K) has the lowest bp of any substance. Remains liquid under pressure at 0 K — quantum mechanical zero-point energy prevents solidification. Critical for MRI and superconductor cooling.'},
+      {t:'5d row dominates',b:'Re(5596) > W(5555) > Ta(5458) > Nb(4744) > Mo(4639) — all 5d/4d metals with multiple d-bonding electrons. bp closely tracks d-electron count and orbital overlap.'},
+      {t:'Industrial bp landmarks',b:'N₂ bp = −196 °C (liquid nitrogen). O₂ = −183 °C. Ar = −186 °C. Fractional distillation of liquid air separates these in exact bp order. JEE AIR separation process question.'},
+      {t:'p-block period 3',b:'Na(883) < Mg(1090) < Al(2519) then jumps to Si(3265). Then drops: P(280) << S(445) < Cl(−35) < Ar(−186). Same bonding-type argument as mp, but bp differences are even more pronounced.'},
+      {t:'Zn group anomaly',b:'Zn(907), Cd(767), Hg(357) — dramatically lower bp than surrounding transition metals. d¹⁰s² configuration = no d-orbital contribution to metallic bond. Weakest metallic bonding in d-block.'},
+      {t:'Uses in JEE',b:'Fractional distillation, industrial separation, and state-of-matter questions all use bp. Identify bonding type: bp < 200 °C → molecular/atomic (gas). bp 500–3500 °C → metallic. bp > 3500 °C → metallic + strong d-overlap.'}
+    ]
+  },
+
+  den:{label:'⬛ Density',name:'Density',unit:'g cm⁻³',
+    dispFn:v=>v.toFixed(2)+' g/cm³',min:0.00009,max:22.59,inv:false,
+    loLbl:'0.00009 (H₂ gas)',hiLbl:'22.59 (Os — densest)',
+    ll:['Low (gases/light metals)','~5 g/cm³ mid','High (heavy d-block metals)'],
+    tagFn:v=>v<0.01?'Gas at STP':v<1?'Lighter than water':v<3?'Light metal':v<8?'Moderate (structural metal)':v<14?'Dense metal':'Very dense (heavy d-block)',
+    noteFn:s=>({Os:'Densest element (22.59 g/cm³) — 5d row, highly compact FCC packing. Marginally denser than Ir. Both > 22 g/cm³.',Ir:'Second densest (22.56 g/cm³) — 5d row, same FCC compact packing as Os. Used in Ir/Pt reference mass standards.',Li:'Lightest metal (0.534 g/cm³) — less dense than water. Na and K also float on water.',K:'Less dense than water (0.862 g/cm³) — explains why K reacts explosively when placed on water surface.',Al:'Density 2.70 g/cm³ — structural lightness combined with good strength. Used in aerospace.',W:'Density 19.3 g/cm³ — second densest commonly used metal. Used in kinetic penetrators and radiation shielding.',Hg:'Only liquid metal at STP, density 13.53 g/cm³ — used in barometers (760 mmHg = 1 atm).'})[s]||'',
+    data:{H:0.00009,He:0.0002,Li:0.534,Be:1.85,B:2.34,C:2.27,N:0.0013,O:0.0014,F:0.0017,Ne:0.0009,Na:0.971,Mg:1.74,Al:2.70,Si:2.33,P:1.82,S:2.07,Cl:0.003,Ar:0.0018,K:0.862,Ca:1.54,Sc:2.99,Ti:4.51,V:6.11,Cr:7.19,Mn:7.43,Fe:7.87,Co:8.90,Ni:8.91,Cu:8.96,Zn:7.13,Ga:5.91,Ge:5.32,As:5.73,Se:4.81,Br:3.12,Kr:0.0037,Rb:1.53,Sr:2.64,Y:4.47,Zr:6.52,Nb:8.57,Mo:10.2,Tc:11.5,Ru:12.1,Rh:12.4,Pd:12.0,Ag:10.5,Cd:8.65,In:7.31,Sn:7.29,Sb:6.68,Te:6.24,I:4.93,Xe:0.0059,Cs:1.87,Ba:3.59,La:6.15,Hf:13.3,Ta:16.7,W:19.3,Re:21.0,Os:22.6,Ir:22.6,Pt:21.5,Au:19.3,Hg:13.5,Tl:11.8,Pb:11.3,Bi:9.75,Po:9.20,At:null,Rn:0.0097,Fr:null,Ra:5.50,Ce:6.77,Pr:6.77,Nd:7.01,Pm:7.26,Sm:7.52,Eu:5.24,Gd:7.90,Tb:8.23,Dy:8.55,Ho:8.80,Er:9.07,Tm:9.32,Yb:6.90,Lu:9.84,Ac:10.1,Th:11.7,Pa:15.4,U:19.1,Np:20.2,Pu:19.8,Am:13.7,Cm:13.5,Bk:14.8,Cf:15.1,Es:null,Fm:null,Md:null,No:null,Lr:null},
+    insights:[
+      {t:'Densest elements',b:'Os (22.59) > Ir (22.56) — these two compete for densest. Both 5d metals with compact FCC packing and massive atomic weight. Re (21.0), Pt (21.5), W (19.3) follow.'},
+      {t:'Metals that float on water',b:'Li(0.534), Na(0.971), K(0.862), Rb(1.53 — doesn\'t float). Only Li, Na, K have density < 1.0 g/cm³. This explains their violent water reactions — direct contact, no sinking needed.'},
+      {t:'d-block density trend',b:'Density increases Sc→Os as atomic mass increases faster than atomic volume. 4d/5d rows denser than 3d. Os and Ir top the chart. After Os, density drops (Au, Hg) — relativistic effects expand outer electrons.'},
+      {t:'Period 3 pattern',b:'Na(0.97) < Mg(1.74) < Al(2.70) < Si(2.33) < P(1.82) < S(2.07). Peak at Al/Cr region. Then drops for nonmetals. Mg and Al used in aerospace for this density/strength balance.'},
+      {t:'Industrial relevance (JEE)',b:'Hg (13.53) used in barometers — 760 mm Hg = 1 atm. W (19.3) in X-ray shielding and kinetic penetrators. Pb (11.3) in gamma shielding. Al (2.70) in aircraft. Density determines all these uses.'},
+      {t:'Lanthanide density trend',b:'La(6.15) → Lu(9.84) — steady increase. Each added 4f electron increases mass more than it expands volume (poor 4f shielding → lanthanide contraction keeps radius nearly constant, mass keeps rising).'}
+    ]
+  }
+};
+
+// ── LAYOUT ────────────────────────────────────────────────────────
+const LAYOUT=[
+  ['H',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,'He'],
+  ['Li','Be',0,0,0,0,0,0,0,0,0,0,'B','C','N','O','F','Ne'],
+  ['Na','Mg',0,0,0,0,0,0,0,0,0,0,'Al','Si','P','S','Cl','Ar'],
+  ['K','Ca','Sc','Ti','V','Cr','Mn','Fe','Co','Ni','Cu','Zn','Ga','Ge','As','Se','Br','Kr'],
+  ['Rb','Sr','Y','Zr','Nb','Mo','Tc','Ru','Rh','Pd','Ag','Cd','In','Sn','Sb','Te','I','Xe'],
+  ['Cs','Ba','La*','Hf','Ta','W','Re','Os','Ir','Pt','Au','Hg','Tl','Pb','Bi','Po','At','Rn'],
+  ['Fr','Ra','Ac*',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+];
+const LN=[0,0,'La','Ce','Pr','Nd','Pm','Sm','Eu','Gd','Tb','Dy','Ho','Er','Tm','Yb','Lu',0];
+const AN=[0,0,'Ac','Th','Pa','U','Np','Pu','Am','Cm','Bk','Cf','Es','Fm','Md','No','Lr',0];
+
+// ── COLOR ─────────────────────────────────────────────────────────
+function getCol(prop,val){
+  if(val===null)return'#090f18';
+  const p=PROPS[prop];
+  let t=(val-p.min)/(p.max-p.min);
+  t=Math.max(0,Math.min(1,t));
+  if(p.inv)t=1-t;
+  const hue=240-t*240;
+  const light=20+13*Math.sin(t*Math.PI);
+  return`hsl(${Math.round(hue)},70%,${Math.round(light)}%)`;
+}
+function getBri(prop,val){
+  if(val===null)return'#1a2d42';
+  const p=PROPS[prop];
+  let t=(val-p.min)/(p.max-p.min);
+  t=Math.max(0,Math.min(1,t));
+  if(p.inv)t=1-t;
+  return`hsl(${Math.round(240-t*240)},80%,62%)`;
+}
+
+// ── STATE ─────────────────────────────────────────────────────────
+let cur='srp';
+
+// ── HOVER ─────────────────────────────────────────────────────────
+function hover(sym){
+  const p=PROPS[cur];
+  const val=p.data[sym];
+  const bc=getBri(cur,val);
+  document.getElementById('p-sym').textContent=sym;
+  document.getElementById('p-sym').style.color=bc;
+  document.getElementById('p-name').textContent=(N[sym]||sym)+' · '+p.unit;
+  document.getElementById('p-val').textContent=val===null?'No data':p.dispFn(val);
+  document.getElementById('p-val').style.color=bc;
+  const tag=document.getElementById('p-tag');
+  if(val!==null){
+    tag.textContent=p.tagFn(val);
+    tag.style.background=getCol(cur,val);
+    tag.style.color=bc;
+    tag.style.display='inline-block';
+  }else tag.style.display='none';
+  document.getElementById('p-note').textContent=p.noteFn(sym);
+}
+
+// ── ELEMENT BUILDER ───────────────────────────────────────────────
+function mkEl(sym,sm){
+  const d=document.createElement('div');
+  d.className='el'+(sm?' sm':'');
+  if(!sym){d.classList.add('emp');return d;}
+  if(sym==='La*'){d.classList.add('mk');d.innerHTML='<span style="font-size:10px;color:#1a2d3e">Ln*</span>';return d;}
+  if(sym==='Ac*'){d.classList.add('mk');d.innerHTML='<span style="font-size:10px;color:#1a2d3e">An*</span>';return d;}
+  if(!N[sym]){d.classList.add('gh');return d;}
+  d.dataset.sym=sym;
+  const p=PROPS[cur];
+  const val=p.data[sym];
+  d.style.background=getCol(cur,val);
+  let dv=val===null?'—':(cur==='en'?val.toFixed(2):cur==='den'?val.toFixed(1):cur==='mc'?val:val);
+  d.innerHTML=`<span class="sym">${sym}</span><span class="val">${dv}</span>`;
+  d.addEventListener('mouseenter',()=>hover(sym));
+  return d;
+}
+
+// ── BUILD TABLE ───────────────────────────────────────────────────
+function buildTable(){
+  const pt=document.getElementById('pt');
+  pt.innerHTML='';
+  LAYOUT.forEach(row=>{
+    const r=document.createElement('div');r.className='row';
+    row.forEach(s=>r.appendChild(mkEl(s===0?null:s,false)));
+    pt.appendChild(r);
+  });
+  const gap=document.createElement('div');gap.className='gap-row';pt.appendChild(gap);
+  [LN,AN].forEach(row=>{
+    const r=document.createElement('div');r.className='row';
+    row.forEach(s=>r.appendChild(mkEl(s===0?null:s,true)));
+    pt.appendChild(r);
+  });
+}
+
+function refreshColors(){
+  document.querySelectorAll('.el[data-sym]').forEach(el=>{
+    const sym=el.dataset.sym;
+    const p=PROPS[cur];
+    const val=p.data[sym];
+    el.style.background=getCol(cur,val);
+    const ve=el.querySelector('.val');
+    if(ve)ve.textContent=val===null?'—':(cur==='en'?val.toFixed(2):cur==='den'?val.toFixed(1):cur==='mc'?val:val);
+  });
+}
+
+// ── LEGEND ────────────────────────────────────────────────────────
+function buildLegend(){
+  const p=PROPS[cur];
+  document.getElementById('leg-lo').textContent=p.loLbl;
+  document.getElementById('leg-hi').textContent=p.hiLbl;
+  document.getElementById('ll1').textContent=p.ll[0];
+  document.getElementById('ll2').textContent=p.ll[1];
+  document.getElementById('ll3').textContent=p.ll[2];
+  const lb=document.getElementById('legbar');lb.innerHTML='';
+  for(let i=0;i<=24;i++){
+    const t=i/24;
+    const val=p.min+t*(p.max-p.min);
+    const seg=document.createElement('div');seg.className='legend-seg';
+    seg.style.background=getCol(cur,val);
+    lb.appendChild(seg);
+  }
+}
+
+// ── INSIGHTS ──────────────────────────────────────────────────────
+function buildInsights(){
+  const p=PROPS[cur];
+  document.getElementById('ins-title').textContent='JEE intuition — '+p.name;
+  const g=document.getElementById('ins-grid');g.innerHTML='';
+  p.insights.forEach(ins=>{
+    const d=document.createElement('div');d.className='ins-item';
+    d.innerHTML=`<strong>${ins.t}</strong>${ins.b}`;
+    g.appendChild(d);
+  });
+}
+
+// ── TABS ──────────────────────────────────────────────────────────
+function buildTabs(){
+  const bar=document.getElementById('tab-bar');
+  Object.entries(PROPS).forEach(([key,p])=>{
+    const t=document.createElement('div');
+    t.className='tab'+(key===cur?' active':'');
+    t.textContent=p.label;
+    t.onclick=()=>setTab(key);
+    bar.appendChild(t);
+  });
+}
+
+function setTab(prop){
+  cur=prop;
+  document.querySelectorAll('.tab').forEach((t,i)=>{
+    t.classList.toggle('active',Object.keys(PROPS)[i]===prop);
+  });
+  refreshColors();
+  buildLegend();
+  buildInsights();
+  document.getElementById('p-sym').textContent='—';
+  document.getElementById('p-sym').style.color='#152030';
+  document.getElementById('p-name').textContent='hover any element';
+  document.getElementById('p-val').textContent='—';
+  document.getElementById('p-val').style.color='#152030';
+  document.getElementById('p-tag').style.display='none';
+  document.getElementById('p-note').textContent='';
+}
+
+buildTabs();
+buildTable();
+buildLegend();
+buildInsights();
+</script>
+</body>
+</html>
