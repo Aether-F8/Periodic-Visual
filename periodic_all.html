@@ -7,8 +7,8 @@
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   :root{
-    --bg-0:#030913;
-    --bg-1:#071424;
+    --bg-0:#000000;
+    --bg-1:#000000;
     --bg-2:#0c1f35;
     --card:#0b1b2e;
     --card-2:#10253e;
@@ -20,10 +20,7 @@
   }
   html, body { width: 100%; min-height: 100%; }
   body {
-    background:
-      radial-gradient(circle at 15% 20%, #123c64 0%, transparent 38%),
-      radial-gradient(circle at 85% 5%, #1d3458 0%, transparent 32%),
-      linear-gradient(180deg, var(--bg-1), var(--bg-0) 55%);
+    background: #000;
     font-family: Inter, "Segoe UI", "SF Pro Display", Roboto, Arial, sans-serif;
     color: var(--text);
     min-height: 100vh;
@@ -36,7 +33,7 @@
     border: 1px solid rgba(124,194,255,.2);
     border-radius: 18px;
     padding: clamp(14px, 2vw, 26px);
-    background: linear-gradient(160deg, rgba(10,23,40,.82), rgba(4,12,24,.82));
+    background: #000;
     box-shadow: 0 28px 90px rgba(0,0,0,.42), inset 0 0 0 1px rgba(140,212,255,.06);
     backdrop-filter: blur(8px);
   }
@@ -83,17 +80,10 @@
   .el.sm .val { font-size: 10px; }
   .gap-row { height: 8px; }
 
-  /* INSIGHTS */
-  .insights { background: linear-gradient(160deg, rgba(13,30,48,.9), rgba(9,20,33,.85)); border: 1px solid var(--line); border-radius: 14px; padding: 17px 18px; margin-top: 14px; }
-  .ins-title { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: #a1d2ff; margin-bottom: 12px; }
-  .ins-grid { display: grid; grid-template-columns: repeat(3, minmax(260px, 1fr)); gap: 12px 18px; }
-  .ins-item { font-size: 13px; color: #9cc1e6; line-height: 1.58; background: rgba(11,25,40,.7); border: 1px solid rgba(130,190,240,.15); border-radius: 10px; padding: 10px; }
-  .ins-item strong { color: #d6eeff; display: block; margin-bottom: 3px; }
-  @media (max-width: 1100px) { .ins-grid { grid-template-columns: 1fr 1fr; } }
+  /* INSIGHTS REMOVED BY REQUEST */
   @media (max-width: 720px) {
     body { padding: 8px; }
     .app { min-height: calc(100vh - 16px); border-radius: 12px; padding: 10px; }
-    .ins-grid { grid-template-columns: 1fr; }
     .tab { padding: 7px 10px; font-size: 12px; }
     .el { width: 50px; height: 50px; }
     .el.sm { width: 42px; height: 42px; }
@@ -110,10 +100,10 @@
 
 <!-- PANEL -->
 <div class="panel">
-  <div class="p-sym" id="p-sym" style="color:#152030">—</div>
+  <div class="p-sym" id="p-sym" style="color:#8ab1d8">—</div>
   <div>
     <div class="p-name" id="p-name">hover any element</div>
-    <div class="p-val" id="p-val" style="color:#152030">—</div>
+    <div class="p-val" id="p-val" style="color:#8ab1d8">—</div>
     <span class="p-tag" id="p-tag" style="display:none"></span>
     <div class="p-note" id="p-note"></div>
   </div>
@@ -134,10 +124,6 @@
 <!-- TABLE -->
 <div class="pt-wrap"><div class="pt" id="pt"></div></div>
 
-<!-- INSIGHTS -->
-<div class="insights">
-  <div class="ins-title" id="ins-title">—</div>
-  <div class="ins-grid" id="ins-grid"></div>
 </div>
 </div>
 
@@ -423,18 +409,6 @@ function buildLegend(){
   }
 }
 
-// ── INSIGHTS ──────────────────────────────────────────────────────
-function buildInsights(){
-  const p=PROPS[cur];
-  document.getElementById('ins-title').textContent='JEE intuition — '+p.name;
-  const g=document.getElementById('ins-grid');g.innerHTML='';
-  p.insights.forEach(ins=>{
-    const d=document.createElement('div');d.className='ins-item';
-    d.innerHTML=`<strong>${ins.t}</strong>${ins.b}`;
-    g.appendChild(d);
-  });
-}
-
 // ── TABS ──────────────────────────────────────────────────────────
 function buildTabs(){
   const bar=document.getElementById('tab-bar');
@@ -454,20 +428,26 @@ function setTab(prop){
   });
   refreshColors();
   buildLegend();
-  buildInsights();
   document.getElementById('p-sym').textContent='—';
-  document.getElementById('p-sym').style.color='#152030';
+  document.getElementById('p-sym').style.color='#8ab1d8';
   document.getElementById('p-name').textContent='hover any element';
   document.getElementById('p-val').textContent='—';
-  document.getElementById('p-val').style.color='#152030';
+  document.getElementById('p-val').style.color='#8ab1d8';
   document.getElementById('p-tag').style.display='none';
   document.getElementById('p-note').textContent='';
 }
 
-buildTabs();
-buildTable();
-buildLegend();
-buildInsights();
+function initApp(){
+  buildTabs();
+  buildTable();
+  buildLegend();
+}
+
+if(document.readyState==='loading'){
+  document.addEventListener('DOMContentLoaded',initApp);
+}else{
+  initApp();
+}
 </script>
 </body>
 </html>
